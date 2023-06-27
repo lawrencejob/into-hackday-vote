@@ -1,92 +1,46 @@
-import { Inter as FontSans } from "next/font/google"
-import localFont from "next/font/local"
+import { useMode } from '@/lib/mode-hook'
+import './globals.css'
+import { Inter } from 'next/font/google'
+import { ThemeProvider } from '@/components/theme-provider'
 
-import "@/styles/globals.css"
-import { siteConfig } from "@/config/site"
-import { absoluteUrl, cn } from "@/lib/utils"
-import { Toaster } from "@/components/ui/toaster"
-import { Analytics } from "@/components/analytics"
-import { TailwindIndicator } from "@/components/tailwind-indicator"
-import { ThemeProvider } from "@/components/theme-provider"
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-// Font files can be colocated inside of `pages`
-const fontHeading = localFont({
-  src: "../assets/fonts/CalSans-SemiBold.woff2",
-  variable: "--font-heading",
-})
-
-interface RootLayoutProps {
-  children: React.ReactNode
-}
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: [
-    "Next.js",
-    "React",
-    "Tailwind CSS",
-    "Server Components",
-    "Radix UI",
-  ],
-  authors: [
-    {
-      name: "shadcn",
-      url: "https://shadcn.com",
-    },
-  ],
-  creator: "shadcn",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [`${siteConfig.url}/og.jpg`],
-    creator: "@shadcn",
-  },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: `${siteConfig.url}/site.webmanifest`,
+  title: 'INTO Hackday 2023',
+  description: 'Welcome to INTO\'s 2023 hackday.',
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+
+  const [mode, modeAddress] = useMode();
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-          fontHeading.variable
-        )}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <Analytics />
-          <Toaster />
-          <TailwindIndicator />
+      <body className={inter.className}>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+          <main className="container">
+            <div className='flex flex-col lg:flex-row py-12 gap-8'>
+              <div className='py-4 w-full space-y-4'>
+                <h1 className='text-4xl'>INTO Hackday 2023</h1>
+                <p className='text-lg font-medium'>Vote for your favourite presentations here.</p>
+                <ol className='list-decimal list-inside'>
+                  <li className={mode === "WELCOME" ? 'font-bold' : ''}>Welcome</li>
+                  <li className={mode === "PRESENTING" ? 'font-bold' : ''}>Presentations</li>
+                  <li className={mode === "VOTING" ? 'font-bold' : ''}>Voting</li>
+                  <li className={mode === "RESULTS" ? 'font-bold' : ''}>Votes revealed</li>
+                  <li className={mode === "FEEDBACK" ? 'font-bold' : ''}>Feedback</li>
+                </ol>
+              </div>
+              <div className='py-4 w-full space-y-6'>
+                {children}
+
+              </div>
+            </div>
+          </main >
         </ThemeProvider>
       </body>
     </html>

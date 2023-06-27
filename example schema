@@ -1,0 +1,10 @@
+schema:
+
+- teams
+  [ id, name ]
+- status
+  [ status, address ]
+- voters
+  [ id, secret, name ]
+- votes
+  [ id, voter, voteA, voteB, voteC, time ]
